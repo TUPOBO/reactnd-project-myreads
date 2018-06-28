@@ -9,11 +9,23 @@ class ShowSearchPage extends React.Component {
     books: [],
     query: ''
   }
-  componentDidMount () {
-    BooksAPI.getAll().then((books) => {
-      this.setState({ books })
-      console.log(this.state.books)
+  updateQuery = (query) => {
+    this.setState({ query }, this.searchBooks(query))
+    console.log(query)
+  }
+
+  searchBooks = (query) => {
+    if(query === '') {
+      this.setState({ books: []})
+    } else {
+      BooksAPI.search(query.trim()).then( books => {
+      if(books&& books.length) {
+        this.setState({ books })
+      }
     })
+    }
+    
+    console.log(this.state.books)
   }
   render () {
     return (
@@ -29,22 +41,19 @@ class ShowSearchPage extends React.Component {
               However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
               you don't find a specific author or title. Every search is limited by search terms.
             */}
-            <input type='text' placeholder='Search by title or author' value={this.state.query}/>
- 
+            <input type='text' placeholder='Search by title or author' 
+            value={this.state.query}
+            onChange={event =>this.updateQuery(event.target.value)}
+            />
           </div>
         </div>
         <div className='search-books-results'>
         
-          <ol className='books-grid' />
-          {
-            this.state.books.map((book) => (
-              
-                      <li key={book.id}>
-                        <BookInfo book={book} />
-                      </li>
-              
-            ))
-          }
+          <ol className='books-grid'>
+            <BookInfo 
+            books = {this.state.books}
+            updateBook = {this.props.updateBook} />
+          </ol>
         </div>
       </div>
      
