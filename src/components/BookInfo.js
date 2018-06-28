@@ -1,4 +1,5 @@
 import React from 'react'
+import Shelves from './Shelves'
 
 class BookInfo extends React.Component {
   render () {
@@ -8,11 +9,12 @@ class BookInfo extends React.Component {
           <div className='book-cover' style={{ width: 128, height: 193, backgroundImage: `url(${this.props.book.imageLinks.thumbnail})` }} />
           <div className='book-shelf-changer'>
             <select value={this.props.book.shelf}>
-              <option value='move' disabled>Move to...</option>
-              <option value='currentlyReading'>Currently Reading</option>
-              <option value='wantToRead'>Want to Read</option>
-              <option value='read'>Read</option>
-              <option value='none'>None</option>
+              <option value='move' disable='true'>Move to...</option>
+              {
+                Shelves.map(shelf => (
+                  <option value={shelf.shelf} key={shelf.shelf}>{shelf.title}</option>
+                ))
+              }
             </select>
           </div>
         </div>
